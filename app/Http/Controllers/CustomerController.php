@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -10,56 +12,46 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        return response()->json(['message' => 'List of all customers', 'customers' => Customer::withCount('contacts')
+            ->when($request->filled('search'), fn($query) => $query->search($request->search))
+            ->when($request->filled('category'), fn($query) => $query->filterByCategory($request->category))
+            ->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(CustomerRequest $request): JsonResponse
     {
-        //
-    }
+        $customer = Customer::create($request->all());
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json(['message' => 'customer created successfully', 'customer' => $customer]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(Customer $customer): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Customer $customer)
-    {
-        //
+        return response()->json(['message' => 'customer found', 'customer' => $customer->loadMissing('contacts')]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(CustomerRequest $request, Customer $customer): JsonResponse
     {
-        //
+        $customer = $customer->update($request->all());
+
+        return response()->json(['message' => 'customer updated successfully', 'customer' => $customer]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): JsonResponse
     {
-        //
+        $customer = $customer->delete();
+
+        return response()->json(['message' => 'customer deleted successfully', 'customer' => $customer]);
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\Category;
 use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,7 +20,7 @@ class CustomerSeeder extends Seeder
             'reference' => 'REF001',
             'category' => Category::Gold->value, // Example category, replace as per your Category enum
             'description' => 'Description for Customer A',
-            'start_date' => now(),
+            'start_date' => now()->format('d/m/Y'),
         ]);
 
         Customer::create([
@@ -27,7 +28,7 @@ class CustomerSeeder extends Seeder
             'reference' => 'REF002',
             'category' => Category::Silver->value, // Example category, replace as per your Category enum
             'description' => 'Description for Customer B',
-            'start_date' => now()->subYear(),
+            'start_date' => now()->subYear(6)->format('d/m/Y'),
         ]);
 
         Customer::create([
@@ -35,7 +36,7 @@ class CustomerSeeder extends Seeder
             'reference' => 'REF003',
             'category' => Category::Bronze->value, // Example category, replace as per your Category enum
             'description' => 'Description for Customer C',
-            'start_date' => now()->subMonths(6),
+            'start_date' => now()->subMonths(6)->format('d/m/Y'),
         ]);
     }
 }
