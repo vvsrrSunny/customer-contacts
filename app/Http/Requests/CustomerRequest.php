@@ -23,8 +23,7 @@ class CustomerRequest extends FormRequest
     public function rules(): array
     {
         $customerId = $this->route('customer')?->id;
-
-        if ($this->route()->named('customer.store')) {
+        if ($this->route()->named('customers.store')) {
             return  [
                 'name' => 'required|string|max:255|unique:customers,name,' . $customerId,
                 'reference' => 'required|string|max:255',
@@ -35,11 +34,6 @@ class CustomerRequest extends FormRequest
         }
 
         return [
-            'id' => [
-                'required',
-                'integer',
-                Rule::exists('customers', 'id')
-            ],
             'name' => 'required|string|max:255|unique:customers,name,' . $customerId,
             'reference' => 'required|string|max:255',
             'category' => 'required|string|max:255',
