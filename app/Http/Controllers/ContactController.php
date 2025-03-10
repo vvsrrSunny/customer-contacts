@@ -2,64 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
-use Illuminate\Http\Request;
+use App\Models\Customer;
+use Illuminate\Http\JsonResponse;
 
 class ContactController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Customer $customer): JsonResponse
     {
-        //
+        return response()->json(['message' => 'List of all contacts', 'contacts' => $customer->contacts()->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Customer $customer, ContactRequest $request): JsonResponse
     {
-        //
-    }
+        $contact = $customer->contacts()->create($request->all());
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json(['message' => 'contact created successfully', 'contact' => $contact]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Contact $contact)
+    public function show(Contact $contact): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Contact $contact)
-    {
-        //
+        return response()->json(['message' => 'contact found', 'contact' => $contact]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Contact $contact)
+    public function update(Customer $customer, ContactRequest $request, Contact $contact): JsonResponse
     {
-        //
+        $contact = $contact->update($request->all());
+
+        return response()->json(['message' => 'contact updated successfully', 'contact' => $contact]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Contact $contact)
+    public function destroy(Customer $customer, Contact $contact): JsonResponse
     {
-        //
+        $contact = $contact->delete();
+
+        return response()->json(['message' => 'contact deleted successfully', 'contact' => $contact]);
     }
 }
