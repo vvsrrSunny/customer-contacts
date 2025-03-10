@@ -6,6 +6,7 @@ use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
@@ -22,6 +23,7 @@ class CustomerController extends Controller
 
     public function store(CustomerRequest $request): JsonResponse
     {
+        Log::info("customer", [$request->all()]);
         $customer = Customer::create($request->all());
 
         return response()->json(['message' => 'customer created successfully', 'customer' => $customer]);
